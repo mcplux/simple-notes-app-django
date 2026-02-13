@@ -15,3 +15,6 @@ db.sqlite3
 # TailwindCSS
 tailwindcss
 *output.css
+
+
+.vscode/

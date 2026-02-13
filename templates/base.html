@@ -5,8 +5,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %} Notes {% endblock title %}</title>
   <link rel="stylesheet" href="{% static 'theme/css/output.css' %}">
+  <title>{% block title %} Notes {% endblock title %}</title>
+  <script src="https://unpkg.com/lucide@0.564"></script>
+  <script src="//unpkg.com/alpinejs@3.15" defer></script>
+  <style>
+    [x-cloak] {
+      display: none !important;
+    }
+  </style>
 </head>
 
 <body class="bg-gray-200">
@@ -15,6 +22,9 @@
 
   {% endblock content %}
 
+  <script>
+    lucide.createIcons();
+  </script>
 </body>
 
 </html>
