@@ -5,10 +5,13 @@ build/
 dist/
 wheels/
 *.egg-info
+staticfiles/
+db.sqlite3
+.ruff_cache
 
 # Virtual environments
 .venv
 
-
-db.sqlite3
-.ruff_cache
+# TailwindCSS
+tailwindcss
+*output.css
