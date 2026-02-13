@@ -4,6 +4,7 @@ from django.contrib.auth.admin import UserAdmin
 from .models import User
 
 
+@admin.register(User)
 class CustomUserAdmin(UserAdmin):
     list_display = ("email", "first_name", "last_name", "is_staff", "is_active")
     list_filter = ("is_staff", "is_active")
@@ -60,6 +61,3 @@ class CustomUserAdmin(UserAdmin):
             },
         ),
     )
-
-
-admin.site.register(User, CustomUserAdmin)
