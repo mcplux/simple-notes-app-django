@@ -2,7 +2,10 @@ from django.http import HttpRequest
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
+from .models import Note
+
 
 @require_http_methods(["GET"])
 def note_list(request: HttpRequest):
-    return render(request, "notes/note_list.html")
+    notes = Note.objects.filter(user=request.user)
+    return render(request, "notes/note_list.html", {"notes": notes})

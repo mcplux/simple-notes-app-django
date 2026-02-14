@@ -1,1 +1,26 @@
-{% extends 'notes/note_base.html' %}
+{% extends "notes/note_base.html" %}
+{% block main %}
+    <h1 class="text-center font-bold text-4xl">My Notes</h1>
+    {% if notes|length > 0 %}
+        <ul class="grid grid-cols-1 gap-3 mt-10 max-w-2xl mx-auto">
+            {% for note in notes %}
+                <li class="flex justify-between items-center gap-3 border p-5 rounded">
+                    <h2 class="text-2xl font-bold truncate">{{ note.title }}</h2>
+                    <div class="flex gap-3 items-center">
+                        <button class="cursor-pointer text-white bg-green-600 rounded-full p-2 hover:bg-green-700 transition-colors">
+                            <i data-lucide="eye"></i>
+                        </button>
+                        <button class="cursor-pointer text-white bg-yellow-600 rounded-full p-2 hover:bg-yellow-700 transition-colors">
+                            <i data-lucide="pencil"></i>
+                        </button>
+                        <button class="cursor-pointer text-white bg-red-600 rounded-full p-2 hover:bg-red-700 transition-colors">
+                            <i data-lucide="trash-2"></i>
+                        </button>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="mt-10 text-center text-gray-600">You don't have any note yet</p>
+    {% endif %}
+{% endblock main %}

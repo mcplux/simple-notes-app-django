@@ -1,37 +1,28 @@
-{% extends 'base.html' %} 
-
-
+{% extends "base.html" %}
 {% block content %}
-<div class="flex min-h-screen" x-data="{ sidebar: window.innerWidth >= 1024 }">
-  <aside
-    x-cloak
-    class="fixed lg:static bg-green-400 w-64 lg:w-96 h-screen z-10 transform transition-transform rounded-r-lg flex flex-col overflow-auto"
-    :class="sidebar ? 'translate-x-0' : '-translate-x-full'"
-  >
-    Sidebar
-  </aside>
-
-  <div
-    x-cloak
-    x-transition.opacity
-    x-show="sidebar"
-    @click="sidebar = false"
-    class="fixed inset-0 bg-black/40 backdrop-blur-xs lg:hidden"
-  ></div>
-
-  <div
-    class="flex flex-col h-screen w-full p-5 overflow-auto transition-all"
-    :class="sidebar ? 'lg:ml-0' : 'lg:-ml-96'"
-  >
-    <header>
-      <button @click="sidebar = !sidebar">
-        <i data-lucide="menu" class="size-8"></i>
-      </button>
-    </header>
-
-    <main class="flex-1 max-w-4xl w-full mt-5 mx-auto">
-      {% block main %} {% endblock main %}
-    </main>
-  </div>
-</div>
+    <div class="flex min-h-screen"
+         x-data="{ sidebar: window.innerWidth >= 1024 }">
+        <aside x-cloak
+               class="flex flex-col fixed lg:static bg-green-400 w-64 lg:w-96 h-screen z-10 transform transition-transform overflow-auto"
+               :class="sidebar ? 'translate-x-0' : '-translate-x-full'">
+            Sidebar
+        </aside>
+        <div x-cloak
+             x-transition.opacity
+             x-show="sidebar"
+             @click="sidebar = false"
+             class="fixed inset-0 bg-black/40 backdrop-blur-xs lg:hidden"></div>
+        <div class="flex flex-col h-screen w-full p-5 overflow-auto transition-all"
+             :class="sidebar ? 'lg:ml-0' : 'lg:-ml-96'">
+            <header>
+                <button @click="sidebar = !sidebar">
+                    <i data-lucide="menu" class="size-8"></i>
+                </button>
+            </header>
+            <main class="flex-1 max-w-4xl w-full mt-5 mx-auto">
+                {% block main %}
+                {% endblock main %}
+            </main>
+        </div>
+    </div>
 {% endblock content %}
