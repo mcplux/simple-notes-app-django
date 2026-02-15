@@ -1,0 +1,31 @@
+{% extends 'notes/note_base.html' %}
+
+{% block main %}
+<h1 class="text-center font-bold text-4xl">{{ note.title }}</h1>
+
+<div class="flex justify-end mt-10">
+    <a 
+        href="{% url 'notes:list' %}"
+        class="flex gap-1 rounded border p-2 bg-green-600 text-white hover:bg-green-700 transition-colors cursor-pointer"
+    >
+        <i data-lucide="arrow-left"></i>
+        Back
+    </a>
+</div>
+
+<div class="flex flex-col gap-3 max-w-2xl mx-auto mt-10">
+    <p class="font-bold">ID: <span class="font-normal">{{ note.pk }}</span></p>
+    <p class="font-bold">Title: <span class="font-normal">{{ note.title }}</span></p>
+    <p class="font-bold">Creation: <span class="font-normal">{{ note.created_at }}</span></p>
+    <p class="font-bold">Last Update: <span class="font-normal">{{ note.updated_at }}</span></p>
+    <p class="font-bold">Content: <span class="font-normal">{{ note.content }}</span></p>
+    <div>
+    <p class="font-bold">Actions:</p>
+        <div class="flex gap-2 font-normal mt-1">
+            <button class="w-1/2 bg-yellow-600 p-1 rounded text-white hover:bg-yellow-700 transition-colors cursor-pointer">Edit</button>
+            <button class="w-1/2 bg-red-600 p-1 rounded text-white hover:bg-red-700 transition-colors cursor-pointer">Delete</button>
+        </div>
+    </div>
+</div>
+
+{% endblock main %}

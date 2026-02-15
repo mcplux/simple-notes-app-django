@@ -1,6 +1,6 @@
 from django.core.exceptions import PermissionDenied
 from django.http import HttpRequest
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 from django_htmx.http import HttpResponseClientRedirect
@@ -38,3 +38,9 @@ def note_create(request: HttpRequest):
         form = NoteForm()
 
     return render(request, "notes/note_create.html", {"form": form})
+
+
+@require_http_methods(["GET"])
+def note_detail(request: HttpRequest, pk: int):
+    note = get_object_or_404(Note, pk=pk)
+    return render(request, "notes/note_detail.html", {"note": note})
