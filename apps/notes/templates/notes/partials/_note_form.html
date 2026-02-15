@@ -1,0 +1,43 @@
+{% load widget_tweaks %}
+
+<form 
+    method="post"
+    hx-post="{% url 'notes:create' %}"
+    hx-target="#form"
+    hx-swap="innerHTML"
+    class="max-w-2xl mx-auto w-full mt-10 p-5 rounded-lg space-y-3"
+    novalidate
+>
+    {% if form.non_field_errors %}
+    <ul class="flex flex-col gap-1">
+        {% for error in form.non_field_errors %}
+        <li class="p-1 bg-red-200 text-sm font-bold text-red-600 border-l-4 border-red-600">{{ error }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% csrf_token %}
+
+    {% for field in form %}
+    <fieldset class="flex flex-col gap-1">
+        <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+        {% render_field field class="border border-gray-700 p-1 rounded" %}
+
+        {% if field.errors %}
+        <ul class="flex flex-col">
+            {% for error in field.errors %}
+            <li class="text-sm font-bold text-red-600">{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+    </fieldset>
+    {% endfor %}
+
+    <button 
+        type="submit"
+        class="w-full p-1 bg-green-600 text-white rounded hover:bg-green-700 cursor-pointer transition-colors"
+    >
+        Create
+    </button>
+</form>

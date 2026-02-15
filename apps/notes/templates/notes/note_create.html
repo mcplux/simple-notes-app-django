@@ -1,0 +1,20 @@
+{% extends 'notes/note_base.html' %}
+
+{% block main %}
+<h1 class="text-center font-bold text-4xl">Create Note</h1>
+
+<div class="flex justify-end">
+    <a
+        href="{% url 'notes:list' %}"
+        class="flex gap-1 rounded border p-2 bg-red-600 text-white hover:bg-red-700 transition-colors cursor-pointer"
+    >
+        <i data-lucide="arrow-left"></i>
+        Cancel
+    </a>
+</div>
+
+<div id="form">
+    {% include 'notes/partials/_note_form.html' %}
+</div>
+
+{% endblock main %}
