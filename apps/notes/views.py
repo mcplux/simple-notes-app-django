@@ -54,3 +54,9 @@ def note_form(request: HttpRequest, pk=None):
 def note_detail(request: HttpRequest, pk: int):
     note = get_object_or_404(Note, pk=pk, user=request.user)
     return render(request, "notes/note_detail.html", {"note": note})
+
+
+@require_http_methods(["GET"])
+def note_delete(request: HttpRequest, pk: int):
+    note = get_object_or_404(Note, pk=pk, user=request.user)
+    return render(request, "notes/partials/_note_confirmation.html", {"note": note})
