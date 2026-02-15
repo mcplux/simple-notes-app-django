@@ -2,7 +2,13 @@
 
 <form 
     method="post"
-    hx-post="{% url 'notes:create' %}"
+    hx-post="
+        {% if note %}
+            {% url 'notes:update' note.pk %}
+        {% else %}
+            {% url 'notes:create' %}
+        {% endif %}
+    "
     hx-target="#form"
     hx-swap="innerHTML"
     class="max-w-2xl mx-auto w-full mt-10 p-5 rounded-lg space-y-3"
@@ -37,7 +43,11 @@
     <button 
         type="submit"
         class="w-full p-1 bg-green-600 text-white rounded hover:bg-green-700 cursor-pointer transition-colors"
-    >
-        Create
+    >    
+        {% if note %}
+        Update note
+        {% else %}
+        Create note    
+        {% endif %}        
     </button>
 </form>

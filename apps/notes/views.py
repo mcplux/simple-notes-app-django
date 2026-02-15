@@ -16,12 +16,14 @@ def note_list(request: HttpRequest):
 
 
 @require_http_methods(["GET", "POST"])
-def note_create(request: HttpRequest):
+def note_form(request: HttpRequest, pk=None):
+    note = get_object_or_404(Note, pk=pk, user=request.user) if pk else None
     if request.method == "POST":
-        form = NoteForm(request.POST)
+        form = NoteForm(request.POST, instance=note)
         if form.is_valid():
             note = form.save(commit=False)
-            note.user = request.user
+            if pk is None:
+                note.user = request.user
             note.save()
 
             if request.htmx:
@@ -30,17 +32,25 @@ def note_create(request: HttpRequest):
             return redirect("notes:list")
 
         elif request.htmx:
-            return render(request, "notes/partials/_note_form.html", {"form": form})
+            return render(
+                request,
+                "notes/partials/_note_form.html",
+                {"form": form, "note": note},
+            )
 
         else:
             raise PermissionDenied()
     else:
-        form = NoteForm()
+        form = NoteForm(instance=note)
 
-    return render(request, "notes/note_create.html", {"form": form})
+    return render(
+        request,
+        "notes/note_form.html",
+        {"form": form, "note": note},
+    )
 
 
 @require_http_methods(["GET"])
 def note_detail(request: HttpRequest, pk: int):
-    note = get_object_or_404(Note, pk=pk)
+    note = get_object_or_404(Note, pk=pk, user=request.user)
     return render(request, "notes/note_detail.html", {"note": note})
