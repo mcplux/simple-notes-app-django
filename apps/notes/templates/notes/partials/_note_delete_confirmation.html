@@ -1,0 +1,23 @@
+<h3 class="text-2xl font-bold text-center">Confirm</h3>
+<p>Are you sure you want to delete "{{ note.title }}" note?</p>
+<form
+    hx-post="{% url 'notes:delete' note.pk %}"
+    @submit="modal = false"
+	class="flex gap-2"
+>
+    {% csrf_token %}
+
+	<button
+        type="submit"
+        class="w-1/2 p-1 rounded text-white bg-red-600 hover:bg-red-700 cursor-pointer transition-colors"
+    >
+        Yes, delete
+    </button>
+
+	<button 
+        @click="modal = false"
+        class="w-1/2 p-1 rounded text-white bg-gray-600 hover:bg-gray-700 cursor-pointer transition-colors"
+    >
+		Cancel
+	</button>
+</form>

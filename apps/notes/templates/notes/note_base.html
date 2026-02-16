@@ -29,8 +29,18 @@
         </header>
 
         <main class="flex-1 max-w-4xl w-full mt-5 mx-auto" x-data="{ modal: false }">
-            {% block main %}
-            {% endblock main %}
+            {% block main %}{% endblock main %}
+            <div
+                x-show="modal"
+                x-transition.opacity
+                class="fixed inset-0 bg-black/50 flex items-center justify-center z-30 backdrop-blur-xs"
+            >
+                <div
+                    id="modal-body"
+                    @click.outside="modal = false"
+                    class="flex flex-col bg-white rounded-xl shadow-lg w-full max-w-2xl max-h-screen p-3 mx-5 space-y-3"
+                ></div>
+            </div>
         </main>
     </div>
 </div>

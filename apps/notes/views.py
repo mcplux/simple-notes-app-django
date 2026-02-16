@@ -3,10 +3,10 @@ from django.http import HttpRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
-from django_htmx.http import HttpResponseClientRedirect
+from django_htmx.http import HttpResponseClientRedirect, retarget
 
-from .models import Note
 from .forms import NoteForm
+from .models import Note
 
 
 @require_http_methods(["GET"])
@@ -56,7 +56,32 @@ def note_detail(request: HttpRequest, pk: int):
     return render(request, "notes/note_detail.html", {"note": note})
 
 
-@require_http_methods(["GET"])
+@require_http_methods(["GET", "POST"])
 def note_delete(request: HttpRequest, pk: int):
+    if not request.htmx:
+        raise PermissionDenied()
+
     note = get_object_or_404(Note, pk=pk, user=request.user)
-    return render(request, "notes/partials/_note_confirmation.html", {"note": note})
+    is_detail_url = request.htmx.current_url.endswith(
+        reverse("notes:detail", args=(note.pk,))
+    )
+    if request.method == "POST":
+        note.delete()
+
+        if is_detail_url:
+            return HttpResponseClientRedirect(reverse("notes:list"))
+
+        notes = Note.objects.filter(user=request.user).order_by("-created_at")
+        response = render(
+            request,
+            "notes/partials/_note_list.html",
+            {"notes": notes},
+        )
+
+        return retarget(response, "#note-list")
+
+    return render(
+        request,
+        "notes/partials/_note_delete_confirmation.html",
+        {"note": note},
+    )
