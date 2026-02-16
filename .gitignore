@@ -18,3 +18,5 @@ tailwindcss
 
 
 .vscode/
+.env*
+!.env.example
