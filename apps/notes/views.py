@@ -17,6 +17,7 @@ def note_list(request: HttpRequest):
     return render(request, "notes/note_list.html", {"notes": notes})
 
 
+@login_required
 @require_http_methods(["GET", "POST"])
 def note_form(request: HttpRequest, pk=None):
     note = get_object_or_404(Note, pk=pk, user=request.user) if pk else None
@@ -52,12 +53,14 @@ def note_form(request: HttpRequest, pk=None):
     )
 
 
+@login_required
 @require_http_methods(["GET"])
 def note_detail(request: HttpRequest, pk: int):
     note = get_object_or_404(Note, pk=pk, user=request.user)
     return render(request, "notes/note_detail.html", {"note": note})
 
 
+@login_required
 @require_http_methods(["GET", "POST"])
 def note_delete(request: HttpRequest, pk: int):
     if not request.htmx:

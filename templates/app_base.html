@@ -1,12 +1,31 @@
 {% extends "base.html" %}
+
 {% block content %}
 <div class="flex min-h-screen" x-data="{ sidebar: window.innerWidth >= 1024 }">
     <aside 
         x-cloak
-        class="flex flex-col fixed lg:static bg-green-400 w-64 lg:w-96 h-screen z-10 transform transition-transform overflow-auto"
+        class="flex flex-col fixed lg:static bg-green-600 w-64 lg:w-96 h-screen z-10 transform transition-transform"
         :class="sidebar ? 'translate-x-0' : '-translate-x-full'"
     >
-        Sidebar
+        <a href="{% url 'notes:list' %}" class="text-center text-white font-bold text-4xl p-5 border-b">Note App</a>
+
+        <nav class="flex-1 flex flex-col gap-5 overflow-auto p-5">
+            <a href="{% url 'notes:create' %}" class="flex gap-2 tex-lg font-bold text-white truncate">
+                <i data-lucide="plus"></i>
+                Add Note
+            </a>
+            <a href="{% url 'notes:list' %}" class="flex gap-2 tex-lg font-bold text-white truncate">
+                <i data-lucide="notepad-text"></i>
+                My Notes
+            </a>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button class="flex gap-2 tex-lg font-bold text-white truncate cursor-pointer" type="submit">
+                    <i data-lucide="log-out"></i>
+                    Logout
+                </button>
+            </form>
+        </nav>
     </aside>
 
     <div 

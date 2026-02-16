@@ -1,8 +1,8 @@
-{% extends "notes/note_base.html" %}
+{% extends "app_base.html" %}
 
 {% block main %}
 <h1 class="text-center font-bold text-4xl">My Notes</h1>
-<div class="flex justify-end">
+<div class="flex justify-end mt-10">
     <a
         href="{% url 'notes:create' %}"
         class="flex gap-1 rounded border p-2 bg-green-600 text-white hover:bg-green-700 transition-colors cursor-pointer"

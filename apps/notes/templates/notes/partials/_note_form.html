@@ -27,7 +27,7 @@
     {% for field in form %}
     <fieldset class="flex flex-col gap-1">
         <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
-        {% render_field field class="border border-gray-700 p-1 rounded" %}
+        {% render_field field class="border border-gray-700 p-1 rounded w-full" %}
 
         {% if field.errors %}
         <ul class="flex flex-col">
