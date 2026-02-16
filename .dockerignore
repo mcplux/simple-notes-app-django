@@ -1,0 +1,12 @@
+.git/
+.ruff_cache/
+.venv/
+.vscode/
+staticfiles/
+
+.dockerignore
+.gitignore
+.python-version
+db.sqlite3
+README.md
+tailwindcss

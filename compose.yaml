@@ -1,0 +1,18 @@
+services:
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: notes-web
+    develop:
+      watch:
+        - path: .
+          action: sync
+          target: /app
+          ignore:
+            - ./.venv
+        - path: ./pyproject.toml
+          action: rebuild
+    ports:
+      - "8000:8000"

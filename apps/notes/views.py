@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.http import HttpRequest
 from django.shortcuts import render, redirect, get_object_or_404
@@ -9,6 +10,7 @@ from .forms import NoteForm
 from .models import Note
 
 
+@login_required
 @require_http_methods(["GET"])
 def note_list(request: HttpRequest):
     notes = Note.objects.filter(user=request.user).order_by("-created_at")
