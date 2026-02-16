@@ -28,14 +28,14 @@ services:
         - path: ./pyproject.toml
           action: rebuild
     ports:
-      - "8000:8000"
+      - "${APP_PORT}:8000"
 
   adminer:
     image: adminer:latest
     container_name: notes-adminer
     restart: always
     ports:
-      - "8080:8080"
+      - "${ADMINER_PORT}:8080"
     depends_on:
       - db
 
