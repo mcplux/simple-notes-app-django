@@ -1,6 +1,20 @@
-# Simple Note App
+# Simple Notes App Django
 
-## Development Setup
+## 🧱 Tech Stack
+
+- [**🐍 Python**](https://www.python.org/) – The language that keeps things readable, powerful, and actually enjoyable to work with.
+- [**🌿 Django**](https://www.djangoproject.com/) – Batteries-included backend framework handling auth, ORM, business logic, and all the serious stuff.
+- [**⚡ HTMX**](https://htmx.org/) – Server-driven interactivity. Dynamic UI using minimal JS.
+- [**🏔 Alpine.js**](https://alpinejs.dev/) – Lightweight frontend reactivity for the small bits of state HTMX doesn’t cover.
+- [**🎨 TailwindCSS**](https://tailwindcss.com/) – Utility-first styling without fighting CSS.
+- [**🔍 Lucide**](https://lucide.dev/) – Clean, consistent SVG icons.
+- [**⚙️ Pydantic Settings**](https://docs.pydantic.dev/latest/concepts/pydantic_settings/) - Type-safe environment configuration.
+- [**🐘 PostgreSQL**](https://www.postgresql.org/) – Reliable, production-grade database.
+- [**🐳 Docker**](https://docs.docker.com/) - Containerized everything.
+- [**📦 Docker Compose**](https://docs.docker.com/compose/) - Orchestrates all services.
+- [**🗄 Adminer**](https://www.adminer.org/) – Lightweight database UI for quickly inspecting and managing PostgreSQL without extra setup.
+
+## 🚀 Development Setup
 
 Follow these steps to run the project locally in development mode
 
@@ -50,7 +64,7 @@ Follow these steps to run the project locally in development mode
    uv sync
    ```
 
-### Useful commands
+### 🗒️ Useful commands
 
 - **Raise all containers**
 
