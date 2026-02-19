@@ -1,12 +1,16 @@
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.http import HttpRequest
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
-from django.views.decorators.http import require_http_methods
-from django.views.generic import ListView, CreateView, UpdateView, DetailView
+from django.views.generic import (
+    ListView,
+    CreateView,
+    UpdateView,
+    DetailView,
+    DeleteView,
+)
 from django_htmx.http import HttpResponseClientRedirect, retarget
+from urllib.parse import urlparse
 
 from .models import Note
 
@@ -15,7 +19,7 @@ class NoteListView(LoginRequiredMixin, ListView):
     context_object_name = "notes"
 
     def get_queryset(self):
-        return Note.objects.filter(user=self.request.user).order_by("-created_at")
+        return Note.objects.filter(user=self.request.user)
 
 
 class NoteDetailView(LoginRequiredMixin, DetailView):
@@ -74,23 +78,33 @@ class NoteUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_invalid(form)
 
 
-@login_required
-@require_http_methods(["GET", "POST"])
-def note_delete(request: HttpRequest, pk: int):
-    if not request.htmx:
-        raise PermissionDenied()
+class NoteDeleteView(LoginRequiredMixin, DeleteView):
+    model = Note
+    template_name = "notes/partials/_note_confirm_delete.html"
+    context_object_name = "note"
+    success_url = reverse_lazy("notes:list")
 
-    note = get_object_or_404(Note, pk=pk, user=request.user)
-    is_detail_url = request.htmx.current_url.endswith(
-        reverse("notes:detail", args=(note.pk,))
-    )
-    if request.method == "POST":
-        note.delete()
+    def dispatch(self, request, *args, **kwargs):
+        if not request.htmx:
+            raise PermissionDenied()
+        return super().dispatch(request, *args, **kwargs)
 
-        if is_detail_url:
-            return HttpResponseClientRedirect(reverse("notes:list"))
+    def get_queryset(self):
+        return Note.objects.filter(user=self.request.user)
 
-        notes = Note.objects.filter(user=request.user).order_by("-created_at")
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        pk = self.object.pk
+
+        self.object.delete()
+
+        current_path = urlparse(request.htmx.current_url).path
+        detail_url = reverse("notes:detail", args=(pk,))
+
+        if current_path == detail_url:
+            return HttpResponseClientRedirect(self.get_success_url())
+
+        notes = self.get_queryset()
         response = render(
             request,
             "notes/partials/_note_list.html",
@@ -98,9 +112,3 @@ def note_delete(request: HttpRequest, pk: int):
         )
 
         return retarget(response, "#note-list")
-
-    return render(
-        request,
-        "notes/partials/_note_confirm_delete.html",
-        {"note": note},
-    )
