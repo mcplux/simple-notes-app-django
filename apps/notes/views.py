@@ -3,11 +3,11 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
-    ListView,
     CreateView,
-    UpdateView,
-    DetailView,
     DeleteView,
+    DetailView,
+    ListView,
+    UpdateView,
 )
 from django_htmx.http import HttpResponseClientRedirect, retarget
 from urllib.parse import urlparse
@@ -15,25 +15,24 @@ from urllib.parse import urlparse
 from .models import Note
 
 
-class NoteListView(LoginRequiredMixin, ListView):
-    context_object_name = "notes"
-
-    def get_queryset(self):
-        return Note.objects.filter(user=self.request.user)
-
-
-class NoteDetailView(LoginRequiredMixin, DetailView):
-    context_object_name = "note"
-
-    def get_queryset(self):
-        return Note.objects.filter(user=self.request.user)
-
-
-class NoteCreateView(LoginRequiredMixin, CreateView):
+class NoteBaseView(LoginRequiredMixin):
     model = Note
     fields = ("title", "content")
     success_url = reverse_lazy("notes:list")
 
+    def get_queryset(self):
+        return super().get_queryset().filter(user=self.request.user)
+
+
+class NoteListView(NoteBaseView, ListView):
+    context_object_name = "notes"
+
+
+class NoteDetailView(NoteBaseView, DetailView):
+    context_object_name = "note"
+
+
+class NoteCreateView(NoteBaseView, CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         response = super().form_valid(form)
@@ -54,11 +53,7 @@ class NoteCreateView(LoginRequiredMixin, CreateView):
         return super().form_invalid(form)
 
 
-class NoteUpdateView(LoginRequiredMixin, UpdateView):
-    model = Note
-    fields = ("title", "content")
-    success_url = reverse_lazy("notes:list")
-
+class NoteUpdateView(NoteBaseView, UpdateView):
     def form_valid(self, form):
         response = super().form_valid(form)
 
@@ -78,19 +73,14 @@ class NoteUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_invalid(form)
 
 
-class NoteDeleteView(LoginRequiredMixin, DeleteView):
-    model = Note
+class NoteDeleteView(NoteBaseView, DeleteView):
     template_name = "notes/partials/_note_confirm_delete.html"
     context_object_name = "note"
-    success_url = reverse_lazy("notes:list")
 
     def dispatch(self, request, *args, **kwargs):
         if not request.htmx:
             raise PermissionDenied()
         return super().dispatch(request, *args, **kwargs)
-
-    def get_queryset(self):
-        return Note.objects.filter(user=self.request.user)
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
