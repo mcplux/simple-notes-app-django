@@ -1,63 +1,77 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.http import HttpRequest
-from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse
+from django.shortcuts import render, get_object_or_404
+from django.urls import reverse, reverse_lazy
 from django.views.decorators.http import require_http_methods
+from django.views.generic import ListView, CreateView, UpdateView, DetailView
 from django_htmx.http import HttpResponseClientRedirect, retarget
 
-from .forms import NoteForm
 from .models import Note
 
 
-@login_required
-@require_http_methods(["GET"])
-def note_list(request: HttpRequest):
-    notes = Note.objects.filter(user=request.user).order_by("-created_at")
-    return render(request, "notes/note_list.html", {"notes": notes})
+class NoteListView(LoginRequiredMixin, ListView):
+    context_object_name = "notes"
+
+    def get_queryset(self):
+        return Note.objects.filter(user=self.request.user).order_by("-created_at")
 
 
-@login_required
-@require_http_methods(["GET", "POST"])
-def note_form(request: HttpRequest, pk=None):
-    note = get_object_or_404(Note, pk=pk, user=request.user) if pk else None
-    if request.method == "POST":
-        form = NoteForm(request.POST, instance=note)
-        if form.is_valid():
-            note = form.save(commit=False)
-            if pk is None:
-                note.user = request.user
-            note.save()
+class NoteDetailView(LoginRequiredMixin, DetailView):
+    context_object_name = "note"
 
-            if request.htmx:
-                return HttpResponseClientRedirect(reverse("notes:list"))
+    def get_queryset(self):
+        return Note.objects.filter(user=self.request.user)
 
-            return redirect("notes:list")
 
-        elif request.htmx:
+class NoteCreateView(LoginRequiredMixin, CreateView):
+    model = Note
+    fields = ("title", "content")
+    success_url = reverse_lazy("notes:list")
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        response = super().form_valid(form)
+
+        if self.request.htmx:
+            return HttpResponseClientRedirect(self.get_success_url())
+
+        return response
+
+    def form_invalid(self, form):
+        if self.request.htmx:
             return render(
-                request,
+                self.request,
                 "notes/partials/_note_form.html",
-                {"form": form, "note": note},
+                {"form": form},
             )
 
-        else:
-            raise PermissionDenied()
-    else:
-        form = NoteForm(instance=note)
-
-    return render(
-        request,
-        "notes/note_form.html",
-        {"form": form, "note": note},
-    )
+        return super().form_invalid(form)
 
 
-@login_required
-@require_http_methods(["GET"])
-def note_detail(request: HttpRequest, pk: int):
-    note = get_object_or_404(Note, pk=pk, user=request.user)
-    return render(request, "notes/note_detail.html", {"note": note})
+class NoteUpdateView(LoginRequiredMixin, UpdateView):
+    model = Note
+    fields = ("title", "content")
+    success_url = reverse_lazy("notes:list")
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        if self.request.htmx:
+            return HttpResponseClientRedirect(self.get_success_url())
+
+        return response
+
+    def form_invalid(self, form):
+        if self.request.htmx:
+            return render(
+                self.request,
+                "notes/partials/_note_form.html",
+                {"form": form, "note": self.get_object()},
+            )
+
+        return super().form_invalid(form)
 
 
 @login_required
@@ -87,6 +101,6 @@ def note_delete(request: HttpRequest, pk: int):
 
     return render(
         request,
-        "notes/partials/_note_delete_confirmation.html",
+        "notes/partials/_note_confirm_delete.html",
         {"note": note},
     )
