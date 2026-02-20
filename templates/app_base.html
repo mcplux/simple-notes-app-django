@@ -18,6 +18,10 @@
                 <i data-lucide="notepad-text"></i>
                 My Notes
             </a>
+            <a href="{% url 'profile' %}" class="flex gap-2 tex-lg font-bold text-white truncate">
+                <i data-lucide="user"></i>
+                My Profile
+            </a>
             <form method="post" action="{% url 'logout' %}">
                 {% csrf_token %}
                 <button class="flex gap-2 tex-lg font-bold text-white truncate cursor-pointer" type="submit">
