@@ -1,5 +1,25 @@
 # Simple Notes App Django
 
+This project was created to demonstrate a fullstack application built with Django. It includes CRUD operations, authentication, authorization, user interaction and micro-reactivity.
+
+## 🏗️ Core Features
+
+- ⚙️ User management.
+  - Registration.
+  - Login.
+  - Logout
+  - Profile updating.
+  - Password changing.
+- 🗒️ Note CRUD operations.
+  - Create notes.
+  - List user notes.
+  - Update notes.
+  - Delete notes.
+  - User can only access their notes
+- ⚡ Interactive & Reactive UI
+  - Reactive sidebar.
+  - Note management without reloads.
+
 ## 🧱 Tech Stack
 
 - [**🐍 Python**](https://www.python.org/) – The language that keeps things readable, powerful, and actually enjoyable to work with.
@@ -14,7 +34,7 @@
 - [**📦 Docker Compose**](https://docs.docker.com/compose/) - Orchestrates all services.
 - [**🗄 Adminer**](https://www.adminer.org/) – Lightweight database UI for quickly inspecting and managing PostgreSQL without extra setup.
 
-## 🚀 Development Setup
+## 🖥️ Development Setup
 
 Follow these steps to run the project locally in development mode
 
@@ -89,3 +109,11 @@ Follow these steps to run the project locally in development mode
   ```bash
   uv add <dependency>
   ```
+
+## 🚀 Deployment
+
+Coming soon...
+
+## ❤️ Author
+
+Made for Juan Pablo Martinez (@mcplux)
