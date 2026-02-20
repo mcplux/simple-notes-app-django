@@ -1,7 +1,14 @@
 {% load widget_tweaks %}
 
-
 <form method="post" class="max-w-2xl w-full bg-white p-5 rounded-lg space-y-3">
+{% if messages %}
+<ul class="space-y-3">
+  {% for message in messages %}
+  <li class="p-2 border-l-2 border-green-800 text-green-800 text-sm bg-green-200">{{message}}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
   {% if form.non_field_errors %}
   <ul class="flex flex-col gap-1">
     {% for error in form.non_field_errors %}
