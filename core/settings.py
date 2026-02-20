@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 from .env import get_settings
 
+# Environment variables from core.env
 env = get_settings()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -34,14 +35,23 @@ ALLOWED_HOSTS = env.ALLOWED_HOSTS
 # Application definition
 
 INSTALLED_APPS = [
+    #################
+    #  Django apps  #
+    #################
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    ######################
+    #  Third-party apps  #
+    ######################
     "django_htmx",
     "widget_tweaks",
+    ##################
+    #  Project apps  #
+    ##################
     "apps.accounts",
     "apps.notes",
 ]
@@ -54,7 +64,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "django_htmx.middleware.HtmxMiddleware",
+    "django_htmx.middleware.HtmxMiddleware",  # Htmx middleware (request.htmx)
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -143,6 +153,7 @@ STATICFILES_DIRS = [
 
 
 # Custom Authentication
+
 AUTH_USER_MODEL = "accounts.User"
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "notes:list"
